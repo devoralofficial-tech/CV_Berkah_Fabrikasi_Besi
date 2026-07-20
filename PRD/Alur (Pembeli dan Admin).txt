@@ -1,0 +1,71 @@
+1. Alur Admin — Pembeli via Website (Order Online)
+User checkout di website → sistem simpan order ke database dengan status Pending, lalu redirect user ke WhatsApp
+User kirim pesan WA ke admin (isi pesan sudah otomatis berisi nomor order + daftar barang + total estimasi)
+Admin buka menu Pesanan Online di dashboard, lihat order yang masuk
+Admin hubungi customer via WA untuk konfirmasi (pastikan barang masih diinginkan, atur pengambilan/pengiriman, dsb), lalu update status jadi "Dihubungi"
+Setelah deal:
+Kalau jadi beli → admin ubah status jadi "Selesai" → sistem otomatis membuat transaksi penjualan, mengurangi stok, dan mencatat log gudang. Admin tidak perlu input ulang barang di kasir.
+Kalau batal → admin ubah status jadi "Dibatalkan" → tidak ada perubahan stok sama sekali (karena stok memang belum pernah dikurangi saat checkout)
+
+Kenapa alurnya begini: supaya stok tidak "hilang" gara-gara order yang cuma tanya-tanya lalu batal.
+
+2. Alur Admin — Pembeli Datang Langsung ke Toko (Walk-in)
+Pembeli datang, admin buka menu Kasir → Transaksi Baru
+Admin cari & pilih produk satu-satu, input qty sesuai yang dibeli
+Sistem otomatis hitung subtotal & total
+Admin input metode bayar (Cash/Transfer), kalau cash sistem hitung kembalian otomatis
+Admin simpan transaksi → sistem otomatis kurangi stok & catat log gudang, lalu tampilkan nota yang bisa diprint
+
+Jadi bedanya: order online tercatat dulu sebagai "rencana pembelian" (perlu difollow-up), sedangkan walk-in langsung jadi transaksi final karena pembeli sudah di depan mata dan langsung bayar.
+
+3. Alur User Membeli via Website
+Buka website → lihat katalog produk (bisa filter kategori/cari nama)
+Klik produk → lihat detail (harga, satuan, stok tersedia)
+Input jumlah yang mau dibeli → klik "Tambah ke Keranjang"
+Bisa lanjut pilih barang lain, atau langsung ke Keranjang
+Di Keranjang, review barang & jumlah → klik "Checkout"
+Isi form: Nama, No HP, Alamat (opsional), Metode Bayar (Cash/Transfer — sifatnya cuma informasi, bukan pembayaran online)
+Klik submit → sistem cek stok sekali lagi, kalau aman, order otomatis tersimpan dan user diarahkan ke WhatsApp
+Di WhatsApp, pesan sudah otomatis terisi (lihat poin 4), user tinggal tekan tombol kirim
+4. Soal Pembayaran & Pesan WhatsApp
+
+Perlu saya luruskan: tidak ada pembayaran online di sistem ini. "Metode Pembayaran" di form checkout itu sifatnya cuma informasi awal (Cash atau Transfer), pembayaran sebenarnya diatur manual antara admin dan customer via WA/di toko (misal transfer ke rekening, atau bayar cash saat ambil barang).
+
+Isi pesan WhatsApp yang otomatis terkirim ke chat (user tinggal tekan "kirim"), contohnya:
+
+Halo, saya ingin memesan (Order #ORD-2026-00123):
+1. Besi Siku 5cm — 25 kg
+2. Plat Baja 3mm — 10 pcs
+Total estimasi: Rp 1.250.000
+
+Nama: Budi
+No. HP: 08xxxxxxxxxx
+Alamat: -
+
+Dari sini, admin dan customer lanjut ngobrol manual soal cara bayar, cara ambil/kirim barang, dsb — sistem tidak ikut campur di bagian ini.
+
+5. Alur Barang Baru Datang ke Toko
+
+Kasus A — Restock produk yang sudah ada (misal besi siku 5cm yang memang sudah jadi produk, dapat kiriman tambahan dari supplier):
+
+Admin buka Gudang → Barang Masuk
+Pilih produk yang sesuai, input jumlah masuk, harga beli (opsional, buat update HPP), sumber/supplier, catatan
+Simpan → sistem otomatis tambah stok produk itu + catat di log gudang (kartu stok)
+6. Alur Jenis Barang Baru (Belum Pernah Ada di Sistem)
+
+Kasus B — Produk benar-benar baru (misal toko baru mulai jual jenis besi yang sebelumnya tidak dijual):
+
+Admin buka Produk → Tambah Produk Baru
+Isi data produk: nama, kategori, satuan (pcs/kg/m), harga jual, harga beli, threshold stok minimum, gambar, deskripsi
+Isi stok awal (jumlah barang yang baru datang tersebut)
+Simpan → produk baru langsung muncul di katalog website, dan stok awalnya otomatis tercatat sebagai transaksi masuk pertama di kartu stok (jadi tetap ada jejak audit, bukan angka yang muncul dari kosong)
+
+Jadi bedanya sederhana: produk sudah ada → pakai "Barang Masuk". Produk belum pernah ada → buat dulu produknya, baru stok awalnya tercatat otomatis.
+
+[][][]
+
+P: Untuk item seperti 'Pipa Stainless 3x2, 2x1/2, 2x4' — apakah tiap ukuran itu sebenarnya barang terpisah (stok & harga beda-beda per ukuran)?
+J: Ya, tiap ukuran = produk sendiri (stok/harga masing-masing)
+
+P: Selain itu, apakah kategori perlu berjenjang lebih dari 2 tingkat (misal Besi > Besi Siku > sub-jenis lagi), atau cukup 2 tingkat (induk > anak)?
+J: Cukup 2 tingkat (induk & anak) saja

@@ -20,6 +20,8 @@ class UpdateProductRequest extends FormRequest
             'low_stock_threshold' => ['required', 'numeric', 'min:0'],
             'image'               => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:2048'],
             'description'         => ['nullable', 'string'],
+            'is_featured'         => ['nullable', 'boolean'],
+            'featured_order'      => ['nullable', 'integer', 'min:0'],
         ];
     }
 }

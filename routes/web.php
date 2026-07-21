@@ -96,7 +96,19 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::get('/profit-loss', [ReportController::class, 'profitLoss'])->name('profit-loss');
         Route::get('/low-stock', [ReportController::class, 'lowStock'])->name('low-stock');
     });
+    // Chatbot
+    Route::prefix('chatbot')->name('chatbot.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\ChatbotController::class, 'index'])->name('index');
+        Route::post('/', [\App\Http\Controllers\Admin\ChatbotController::class, 'store'])->name('store');
+        Route::put('/{faq}', [\App\Http\Controllers\Admin\ChatbotController::class, 'update'])->name('update');
+        Route::delete('/{faq}', [\App\Http\Controllers\Admin\ChatbotController::class, 'destroy'])->name('destroy');
+        Route::get('/unanswered', [\App\Http\Controllers\Admin\ChatbotController::class, 'unanswered'])->name('unanswered');
+    });
 });
+
+// Chatbot API
+Route::get('/chatbot/faqs', [\App\Http\Controllers\ChatbotController::class, 'getFaqs']);
+Route::post('/chatbot/ask', [\App\Http\Controllers\ChatbotController::class, 'ask']);
 
 // Breeze auth routes (login, logout, password reset — NO register)
 require __DIR__ . '/auth.php';

@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UpdateSettingsRequest;
 use App\Http\Requests\Admin\UpdateProfileRequest;
 use App\Models\Setting;
-use Illuminate\Support\Facades\Hash;
 
 class SettingController extends Controller
 {
@@ -37,12 +36,7 @@ class SettingController extends Controller
 
         $data = [
             'name'  => $request->name,
-            'email' => $request->email,
         ];
-
-        if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
-        }
 
         $user->update($data);
 

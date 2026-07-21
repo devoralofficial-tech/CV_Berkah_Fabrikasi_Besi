@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 
 use App\Models\ChatbotFaq;
 use App\Models\ChatbotUnansweredLog;
-use Illuminate\Http\Request;
 
 class ChatbotController extends Controller
 {

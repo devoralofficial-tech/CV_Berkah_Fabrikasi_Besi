@@ -21,10 +21,21 @@
      x-data="posApp()"
      x-init='initProducts(@json($posProducts))'>
 
-    <div class="flex-1 flex flex-col lg:flex-row overflow-hidden">
+    {{-- Tab Navigation for Mobile --}}
+    <div class="flex lg:hidden bg-white border-b border-slate-200 shrink-0">
+        <button @click="activeTab = 'products'" :class="activeTab === 'products' ? 'text-sky-600 border-b-2 border-sky-600' : 'text-slate-500 hover:bg-slate-50'" class="flex-1 py-3 text-sm font-bold text-center transition-colors">
+            Pilih Produk
+        </button>
+        <button @click="activeTab = 'cart'" :class="activeTab === 'cart' ? 'text-sky-600 border-b-2 border-sky-600' : 'text-slate-500 hover:bg-slate-50'" class="flex-1 py-3 text-sm font-bold text-center transition-colors flex items-center justify-center gap-2">
+            Keranjang
+            <span x-show="items.length > 0" x-text="items.length" class="bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full min-w-[20px]" style="display: none;"></span>
+        </button>
+    </div>
+
+    <div class="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
         
         {{-- Left Panel: Products --}}
-        <div class="flex-1 flex flex-col min-w-0">
+        <div class="flex-1 flex-col min-w-0" :class="activeTab === 'products' ? 'flex' : 'hidden lg:flex'">
             {{-- Search Bar --}}
             <div class="bg-white px-6 py-4 border-b border-slate-200 shadow-sm z-10 flex items-center gap-4">
                 <div class="relative flex-1">
@@ -70,7 +81,7 @@
         </div>
 
         {{-- Right Panel: Cart / Receipt --}}
-        <div class="w-full lg:w-[400px] xl:w-[450px] flex-1 lg:flex-none bg-white border-t lg:border-t-0 lg:border-l border-slate-200 shadow-2xl flex flex-col z-20">
+        <div class="w-full lg:w-[400px] xl:w-[450px] bg-white border-t lg:border-t-0 lg:border-l border-slate-200 shadow-2xl z-20 flex-col" :class="activeTab === 'cart' ? 'flex absolute inset-0 lg:static' : 'hidden lg:flex'">
             {{-- Receipt Header --}}
             <div class="px-6 py-5 border-b border-slate-100 bg-slate-50/50">
                 <h2 class="text-lg font-bold text-slate-800" style="font-family: 'Sora', sans-serif;">Keranjang Kasir</h2>
@@ -174,6 +185,7 @@
 <script>
 function posApp() {
     return {
+        activeTab: 'products',
         products: [],
         search: '',
         items: [],

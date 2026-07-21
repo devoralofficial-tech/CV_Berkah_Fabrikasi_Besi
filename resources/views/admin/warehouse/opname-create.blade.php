@@ -10,7 +10,7 @@
     <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
         <form action="{{ route('admin.warehouse.opname-store') }}" method="POST" x-data="opnameForm()" @submit.prevent="submitForm($event)" id="opnameForm">
             @csrf
-            <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Tanggal Opname <span class="text-red-500">*</span></label>
                     <input type="date" name="opname_date" value="{{ old('opname_date', today()->format('Y-m-d')) }}" class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">

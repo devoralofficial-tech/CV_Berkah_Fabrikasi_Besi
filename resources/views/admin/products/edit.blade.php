@@ -31,7 +31,7 @@
                 @error('category_id')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
-            <div class="grid grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Satuan</label>
                     <select name="unit" class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
@@ -56,7 +56,7 @@
                 <p class="text-xs text-slate-400 mt-1">Stok saat ini: <strong>{{ $product->stock }} {{ $product->unit }}</strong> — untuk mengubah stok, gunakan menu Barang Masuk/Keluar</p>
             </div>
 
-            <div class="grid grid-cols-2 gap-4 p-4 bg-amber-50 rounded-lg border border-amber-100">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-amber-50 rounded-lg border border-amber-100">
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-amber-700 mb-1">Tampilkan di Produk Unggulan?</label>
                     <select name="is_featured" class="w-full border border-amber-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
@@ -88,9 +88,9 @@
                 <textarea name="description" rows="3" class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 resize-none">{{ old('description', $product->description) }}</textarea>
             </div>
 
-            <div class="flex gap-3 pt-2">
-                <button type="submit" class="bg-sky-600 hover:bg-sky-700 text-white font-bold px-6 py-2.5 rounded-lg text-sm transition-all shadow-sm">Perbarui</button>
-                <a href="{{ route('admin.products.index') }}" class="px-6 py-2.5 border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-800 font-bold rounded-lg text-sm transition-colors">Batal</a>
+            <div class="flex items-center gap-3 p-4 mt-6 bg-emerald-50 rounded-xl border border-emerald-100">
+                <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-lg text-sm transition-all shadow-sm flex-1 sm:flex-none text-center">Simpan Perubahan</button>
+                <a href="{{ route('admin.products.index') }}" class="px-6 py-2.5 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-800 font-bold rounded-lg text-sm transition-colors flex-1 sm:flex-none text-center">Batal</a>
             </div>
         </form>
     </div>

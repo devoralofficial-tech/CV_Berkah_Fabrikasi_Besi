@@ -101,26 +101,39 @@
                 <div class="space-y-1">
                     <template x-for="(item, i) in items" :key="item.id">
                         <div class="flex flex-col p-4 bg-white rounded-xl border border-slate-100 hover:border-slate-200 transition">
-                            <div class="flex justify-between items-start mb-2">
+                            <div class="flex justify-between items-start mb-3">
                                 <div class="pr-3">
                                     <h4 class="font-bold text-slate-800 text-sm leading-snug" x-text="item.name"></h4>
                                     <p class="text-xs text-sky-600 font-semibold mt-0.5" x-text="'@ Rp ' + item.price.toLocaleString('id-ID') + ' / ' + item.unit"></p>
                                 </div>
-                                <button @click="removeItem(i)" class="text-slate-300 hover:text-red-500 transition-colors p-1">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                                </button>
-                            </div>
-                            <div class="flex items-center justify-between mt-2">
-                                <div class="flex items-center bg-slate-100 rounded-lg p-1 border border-slate-200">
-                                    <button @click="decreaseQty(i)" class="w-7 h-7 flex items-center justify-center bg-white rounded shadow-sm text-slate-600 hover:text-sky-600 transition">−</button>
-                                    <input type="number" x-model="item.qty" @input="validateQty(i)"
-                                           class="w-12 text-center text-sm bg-transparent border-none focus:ring-0 font-bold text-slate-700 p-0">
-                                    <span class="text-xs text-slate-500 font-semibold mr-1" x-text="item.unit"></span>
-                                    <button @click="increaseQty(i)" class="w-7 h-7 flex items-center justify-center bg-white rounded shadow-sm text-slate-600 hover:text-sky-600 transition">+</button>
-                                </div>
-                                <div class="text-right">
+                                <div class="text-right shrink-0">
                                     <p class="font-black text-slate-800 text-[15px]" x-text="'Rp ' + (item.price * item.qty).toLocaleString('id-ID')"></p>
                                 </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="flex-1 flex items-center justify-between bg-slate-100 rounded-lg p-1 border border-slate-200">
+                                    <div class="flex items-center gap-1">
+                                        <button @click="adjustQty(i, -5)" type="button" class="w-8 h-8 flex items-center justify-center bg-white rounded shadow-sm text-slate-600 hover:text-sky-600 transition text-[11px] font-bold leading-none">-5</button>
+                                        <template x-if="item.unit !== 'pcs'">
+                                            <button @click="adjustQty(i, -0.5)" type="button" class="w-8 h-8 flex items-center justify-center bg-white rounded shadow-sm text-slate-600 hover:text-sky-600 transition text-[11px] font-bold leading-none">-.5</button>
+                                        </template>
+                                        <button @click="adjustQty(i, item.unit === 'pcs' ? -1 : -0.1)" type="button" class="w-8 h-8 flex items-center justify-center bg-white rounded shadow-sm text-slate-600 hover:text-sky-600 transition font-bold text-sm leading-none">−</button>
+                                    </div>
+                                    
+                                    <input type="text" x-model="item.qty" @input="validateQty(i)" readonly
+                                           class="w-12 text-center text-sm bg-transparent border-none focus:ring-0 font-black text-slate-700 p-0 pointer-events-none mx-1">
+                                    
+                                    <div class="flex items-center gap-1">
+                                        <button @click="adjustQty(i, item.unit === 'pcs' ? 1 : 0.1)" type="button" class="w-8 h-8 flex items-center justify-center bg-white rounded shadow-sm text-slate-600 hover:text-sky-600 transition font-bold text-sm leading-none">+</button>
+                                        <template x-if="item.unit !== 'pcs'">
+                                            <button @click="adjustQty(i, 0.5)" type="button" class="w-8 h-8 flex items-center justify-center bg-white rounded shadow-sm text-slate-600 hover:text-sky-600 transition text-[11px] font-bold leading-none">+.5</button>
+                                        </template>
+                                        <button @click="adjustQty(i, 5)" type="button" class="w-8 h-8 flex items-center justify-center bg-white rounded shadow-sm text-slate-600 hover:text-sky-600 transition text-[11px] font-bold leading-none">+5</button>
+                                    </div>
+                                </div>
+                                <button @click="removeItem(i)" type="button" class="w-11 h-11 flex items-center justify-center shrink-0 bg-red-50 text-red-500 border border-red-100 rounded-lg hover:bg-red-500 hover:text-white transition-colors shadow-sm" title="Hapus Item">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                </button>
                             </div>
                         </div>
                     </template>
@@ -215,20 +228,18 @@ function posApp() {
         removeItem(i) { 
             this.items.splice(i, 1); 
         },
-        increaseQty(i) {
+        adjustQty(i, amount) {
             const item = this.items[i];
-            const step = item.unit === 'pcs' ? 1 : 0.1;
-            item.qty = Math.min(parseFloat((parseFloat(item.qty) + step).toFixed(2)), item.stock);
-        },
-        decreaseQty(i) {
-            const item = this.items[i];
-            const step = item.unit === 'pcs' ? 1 : 0.1;
             const min = item.unit === 'pcs' ? 1 : 0.1;
-            item.qty = Math.max(parseFloat((parseFloat(item.qty) - step).toFixed(2)), min);
+            let current = parseFloat(item.qty) || 0;
+            let newQty = parseFloat((current + amount).toFixed(2));
+            item.qty = Math.max(Math.min(newQty, item.stock), min);
         },
         validateQty(i) {
             const item = this.items[i];
-            item.qty = Math.min(Math.max(parseFloat(item.qty) || 0.1, 0.01), item.stock);
+            let val = parseFloat(item.qty) || (item.unit === 'pcs' ? 1 : 0.1);
+            if (item.unit === 'pcs') val = Math.round(val);
+            item.qty = Math.min(Math.max(val, item.unit === 'pcs' ? 1 : 0.01), item.stock);
         },
         submitSale() {
             if (this.items.length === 0) return;

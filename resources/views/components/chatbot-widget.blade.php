@@ -1,4 +1,4 @@
-<div x-data="chatbot()" class="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-[60] font-sans">
+<div x-data="chatbot()" @click.outside="isOpen = false" class="fixed right-4 md:right-6 z-[60] font-sans {{ request()->routeIs('product.show') ? 'max-md:bottom-[220px] bottom-20 md:bottom-24' : 'bottom-20 md:bottom-20' }}">
     
     {{-- Chat Button --}}
     <button @click="toggle()" 
@@ -14,13 +14,13 @@
     {{-- Chat Window --}}
     <div x-show="isOpen" 
          x-transition.opacity.translate.y.10px
-         style="display: none;"
-         class="absolute bottom-16 right-0 w-[calc(100vw-32px)] sm:w-[350px] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col">
+         style="display: none; height: 500px; max-height: calc(100svh - 180px);"
+         class="absolute bottom-16 right-0 w-[calc(100vw-32px)] sm:w-[350px] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col z-50">
         
         {{-- Header --}}
-        <div class="bg-slate-900 text-white p-4 flex items-center gap-3">
-            <div class="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center shrink-0">
-                <svg class="w-4 h-4 text-slate-900" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg>
+        <div class="bg-slate-900 text-white p-4 flex items-center gap-3 shrink-0">
+            <div class="w-8 h-8 bg-amber-500 rounded-sm flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-slate-900" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
             </div>
             <div>
                 <h3 class="font-bold text-sm" style="font-family: 'Sora', sans-serif;">Asisten CV Berkah</h3>
@@ -29,7 +29,7 @@
         </div>
 
         {{-- Messages Area --}}
-        <div class="flex-1 p-4 h-[350px] sm:h-[400px] overflow-y-auto bg-slate-50 space-y-4" id="chatbot-messages">
+        <div class="flex-1 p-4 overflow-y-auto bg-slate-50 space-y-4 min-h-0" id="chatbot-messages">
             <template x-for="(msg, index) in messages" :key="index">
                 <div :class="msg.isUser ? 'flex justify-end' : 'flex justify-start'">
                     <div :class="msg.isUser ? 'bg-amber-500 text-slate-900' : 'bg-white border border-slate-200 text-slate-700'" 
@@ -47,7 +47,7 @@
         </div>
 
         {{-- Quick Replies & Input --}}
-        <div class="bg-white border-t border-slate-100 p-3">
+        <div class="bg-white border-t border-slate-100 p-3 shrink-0">
             {{-- Quick Replies --}}
             <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide" x-show="showFaqs">
                 <template x-for="faq in faqs" :key="faq.id">
@@ -98,18 +98,58 @@ function chatbot() {
             try {
                 const res = await fetch('/chatbot/faqs');
                 const data = await res.json();
-                this.faqs = data;
+                if(data && data.length > 0) {
+                    this.faqs = data;
+                } else {
+                    this.useFallbackFaqs();
+                }
             } catch (err) {
                 console.error('Gagal memuat FAQ:', err);
+                this.useFallbackFaqs();
             }
+        },
+
+        useFallbackFaqs() {
+            let cleanWa = this.waNumber.replace(/\D/g, '');
+            if(!cleanWa) cleanWa = '6281234567890';
+            let waLink = `https://wa.me/${cleanWa}?text=Halo,%20CS%20CV%20Berkah.%20Saya%20ingin%20bertanya...`;
+
+            this.faqs = [
+                { 
+                    id: 'fallback-1', 
+                    question: 'Bagaimana cara memesannya?', 
+                    answer: 'Sangat mudah! 🎉<br><br>1. Cari barang yang Anda inginkan, lalu tekan tombol <b>Tambah ke Keranjang</b>.<br>2. Kalau sudah selesai, pencet gambar <b>Keranjang</b> di pojok kanan atas.<br>3. Terakhir, klik tombol <b>Checkout via WhatsApp</b>.<br><br>Nanti Anda akan langsung terhubung dengan tim CS kami untuk mengatur pembayaran dan pengiriman. Mudah kan? 😊' 
+                },
+                { 
+                    id: 'fallback-2', 
+                    question: 'Apakah ada layanan antar?', 
+                    answer: 'Ada dong! 🚚<br><br>Kami bisa mengantar pesanan langsung ke rumah atau lokasi proyek Anda. Biaya kirimnya bisa didiskusikan langsung dengan CS kami ya, disesuaikan dengan jarak lokasi Anda!' 
+                },
+                { 
+                    id: 'fallback-3', 
+                    question: 'Hubungi CS (Tanya Lainnya)', 
+                    answer: `Tentu! Anda bisa langsung berbicara dengan tim CS kami untuk menanyakan harga, ukuran khusus, atau bantuan lainnya.<br><br><a href="${waLink}" target="_blank" class="inline-block bg-emerald-500 text-white text-xs font-bold px-4 py-2 rounded-lg mt-1 hover:bg-emerald-600 transition">💬 Chat CS via WhatsApp</a>` 
+                }
+            ];
         },
 
         async askFaq(faq) {
             this.messages.push({ isUser: true, text: faq.question });
             this.showFaqs = false;
             this.scrollToBottom();
-            this.isLoading = true;
+            
+            if (faq.answer) {
+                this.isLoading = true;
+                setTimeout(() => {
+                    this.isLoading = false;
+                    this.messages.push({ isUser: false, text: faq.answer });
+                    this.showFaqs = true;
+                    this.scrollToBottom();
+                }, 600);
+                return;
+            }
 
+            this.isLoading = true;
             try {
                 const res = await fetch('/chatbot/ask', {
                     method: 'POST',
@@ -124,16 +164,28 @@ function chatbot() {
                 
                 if (data.answer) {
                     this.messages.push({ isUser: false, text: data.answer });
+                } else {
+                    this.showCSFallback(faq.question);
                 }
             } catch (err) {
                 this.isLoading = false;
-                this.messages.push({ isUser: false, text: 'Maaf, terjadi kesalahan.' });
+                this.showCSFallback(faq.question);
             }
             this.showFaqs = true;
             this.scrollToBottom();
         },
 
-        async submitManual() {
+        showCSFallback(q) {
+            let cleanWa = this.waNumber.replace(/\D/g, '');
+            if(!cleanWa) cleanWa = '6281234567890';
+            let waLink = `https://wa.me/${cleanWa}?text=Halo,%20saya%20ingin%20bertanya:%20${encodeURIComponent(q)}`;
+            this.messages.push({ 
+                isUser: false, 
+                text: `Untuk pertanyaan ini atau konsultasi lebih lanjut, silakan hubungi CS kami secara langsung.<br><br><a href="${waLink}" target="_blank" class="inline-block bg-emerald-500 text-white text-xs font-bold px-4 py-2 rounded-lg mt-1 hover:bg-emerald-600 transition">Chat CS via WhatsApp</a>`
+            });
+        },
+
+        submitManual() {
             if (!this.inputText.trim()) return;
             const q = this.inputText.trim();
             this.inputText = '';
@@ -141,36 +193,14 @@ function chatbot() {
             this.messages.push({ isUser: true, text: q });
             this.showFaqs = false;
             this.scrollToBottom();
+            
             this.isLoading = true;
-
-            try {
-                const res = await fetch('/chatbot/ask', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({ question: q })
-                });
-                const data = await res.json();
+            setTimeout(() => {
                 this.isLoading = false;
-                
-                if (data.answer) {
-                    this.messages.push({ isUser: false, text: data.answer });
-                } else {
-                    let cleanWa = this.waNumber.replace(/\D/g, '');
-                    let waLink = `https://wa.me/${cleanWa}?text=Halo,%20saya%20ingin%20bertanya:%20${encodeURIComponent(q)}`;
-                    this.messages.push({ 
-                        isUser: false, 
-                        text: `Maaf, pertanyaan Anda belum bisa saya jawab. Silakan hubungi CS kami langsung.<br><br><a href="${waLink}" target="_blank" class="inline-block bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg">Chat CS via WhatsApp</a>`
-                    });
-                }
-            } catch (err) {
-                this.isLoading = false;
-                this.messages.push({ isUser: false, text: 'Maaf, terjadi kesalahan.' });
-            }
-            this.showFaqs = true;
-            this.scrollToBottom();
+                this.showCSFallback(q);
+                this.showFaqs = true;
+                this.scrollToBottom();
+            }, 800);
         },
 
         scrollToBottom() {

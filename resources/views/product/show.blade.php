@@ -2,7 +2,7 @@
 @section('title', $product->name . ' — CV Berkah')
 
 @section('content')
-<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-40 md:py-8">
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-24 md:py-8">
     {{-- Breadcrumb --}}
     <nav class="flex items-center gap-2 text-sm text-slate-400 mb-6">
         <a href="{{ route('product.index') }}" class="hover:text-amber-600 transition">Produk</a>
@@ -20,8 +20,8 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
         {{-- Image --}}
-        <div class="-mx-4 sm:mx-0 sm:rounded-2xl bg-slate-100 overflow-hidden aspect-square sm:aspect-auto">
-            <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-full h-full object-cover sm:object-contain">
+        <div class="-mx-4 sm:mx-0 sm:rounded-2xl bg-slate-100 overflow-hidden aspect-square">
+            <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
         </div>
 
         {{-- Details --}}
@@ -52,40 +52,36 @@
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                 
-                {{-- Sticky Bottom Bar (Mobile) / Static Form (Desktop) --}}
-                <div class="fixed bottom-[68px] md:bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] md:static md:border-none md:shadow-none md:bg-transparent md:p-0 z-40">
-                    <div class="flex flex-row md:flex-col gap-4">
-                        {{-- Qty Selector --}}
-                        <div class="flex-none">
-                            <label class="hidden md:block text-sm font-medium text-slate-700 mb-2">Jumlah ({{ $product->unit }})</label>
-                            <div class="flex items-center gap-2">
-                                <button type="button" @click="decrease()" class="w-10 h-10 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-lg font-bold text-slate-700 transition">−</button>
-                                <input type="number" name="qty" x-model="qty"
-                                       min="{{ $product->unit === 'pcs' ? '1' : '0.1' }}"
-                                       max="{{ $product->stock }}"
-                                       step="{{ $product->unit === 'pcs' ? '1' : '0.1' }}"
-                                       class="w-16 md:w-24 text-center border border-slate-200 rounded-lg py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400">
-                                <button type="button" @click="increase()" class="w-10 h-10 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-lg font-bold text-slate-700 transition">+</button>
-                            </div>
-                            @error('qty')<p class="text-red-500 text-xs mt-1 absolute md:static">{{ $message }}</p>@enderror
-                        </div>
-
-                        {{-- Subtotal (Desktop only) --}}
-                        <div class="hidden md:block bg-slate-50 rounded-xl p-3 text-sm">
-                            <div class="flex justify-between items-center">
-                                <span class="text-slate-500">Subtotal:</span>
-                                <span class="font-bold text-slate-800 text-lg" x-text="'Rp ' + (qty * {{ $product->sell_price }}).toLocaleString('id-ID')"></span>
-                            </div>
-                        </div>
-
-                        {{-- Submit Button --}}
-                        <button type="submit"
-                                class="flex-1 w-full bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold py-2 md:py-3.5 rounded-xl transition duration-200 flex items-center justify-center gap-2 shadow-sm">
-                            <svg class="w-5 h-5 hidden md:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                            <span class="md:hidden">Beli</span>
-                            <span class="hidden md:inline">Tambah ke Keranjang</span>
-                        </button>
+                {{-- Qty Selector --}}
+                <div class="mt-6 mb-4">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Jumlah ({{ $product->unit }})</label>
+                    <div class="flex items-center gap-2">
+                        <button type="button" @click="decrease()" class="w-10 h-10 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-lg font-bold text-slate-700 transition">−</button>
+                        <input type="number" name="qty" x-model.number="qty"
+                               min="{{ $product->unit === 'pcs' ? '1' : '0.1' }}"
+                               max="{{ $product->stock }}"
+                               step="{{ $product->unit === 'pcs' ? '1' : '0.1' }}"
+                               class="w-16 md:w-24 text-center border border-slate-200 rounded-lg py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400">
+                        <button type="button" @click="increase()" class="w-10 h-10 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-lg font-bold text-slate-700 transition">+</button>
                     </div>
+                    @error('qty')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+                </div>
+
+                {{-- Subtotal (Desktop only) --}}
+                <div class="hidden md:block bg-slate-50 rounded-xl p-3 text-sm mb-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-500">Subtotal:</span>
+                        <span class="font-bold text-slate-800 text-lg" x-text="'Rp ' + (qty * {{ $product->sell_price }}).toLocaleString('id-ID')"></span>
+                    </div>
+                </div>
+
+                {{-- Submit Button --}}
+                <div>
+                    <button type="submit"
+                            class="w-full bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold py-3 md:py-3.5 rounded-xl transition duration-200 flex items-center justify-center gap-2 shadow-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                        <span>Tambah ke Keranjang</span>
+                    </button>
                 </div>
             </form>
             @else
@@ -108,12 +104,14 @@ function productDetail(maxStock, unit) {
         qty: unit === 'pcs' ? 1 : 1,
         increase() {
             const step = unit === 'pcs' ? 1 : 0.1;
-            this.qty = Math.min(parseFloat((this.qty + step).toFixed(2)), maxStock);
+            let current = parseFloat(this.qty) || 0;
+            this.qty = Math.min(parseFloat((current + step).toFixed(2)), maxStock);
         },
         decrease() {
             const step = unit === 'pcs' ? 1 : 0.1;
             const min = unit === 'pcs' ? 1 : 0.1;
-            this.qty = Math.max(parseFloat((this.qty - step).toFixed(2)), min);
+            let current = parseFloat(this.qty) || 0;
+            this.qty = Math.max(parseFloat((current - step).toFixed(2)), min);
         }
     }
 }

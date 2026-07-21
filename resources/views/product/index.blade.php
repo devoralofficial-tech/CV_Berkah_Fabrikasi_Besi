@@ -20,25 +20,70 @@
             </button>
         </div>
 
-        {{-- Mobile Backdrop --}}
-        <div x-show="mobileFiltersOpen" x-transition.opacity class="fixed inset-0 z-[60] bg-slate-900/50 backdrop-blur-sm lg:hidden" @click="mobileFiltersOpen = false" style="display: none;"></div>
-
-        {{-- Sidebar / Bottom Sheet Filters --}}
-        <aside class="fixed inset-x-0 bottom-0 z-[70] bg-white rounded-t-2xl shadow-xl max-h-[85vh] overflow-y-auto lg:static lg:bg-transparent lg:rounded-none lg:shadow-none lg:overflow-visible lg:max-h-none lg:z-auto w-full lg:w-64 shrink-0 transition-transform duration-300 lg:translate-y-0"
-               :class="mobileFiltersOpen ? 'translate-y-0' : 'translate-y-full lg:translate-y-0'">
-            <div class="bg-white lg:rounded-xl lg:shadow-sm lg:border lg:border-slate-100 p-5 lg:sticky lg:top-24">
-                <div class="flex justify-between items-center lg:hidden mb-4">
-                    <h3 class="font-bold text-slate-800">Filter</h3>
-                    <button @click="mobileFiltersOpen = false" class="bg-slate-100 text-slate-500 hover:text-slate-700 p-2 rounded-full">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                    </button>
+        {{-- Mobile Backdrop & Drawer --}}
+        <div class="lg:hidden" x-show="mobileFiltersOpen" style="display: none;">
+            {{-- Backdrop --}}
+            <div x-show="mobileFiltersOpen" x-transition.opacity class="fixed inset-0 z-[60] bg-slate-900/50 backdrop-blur-sm" @click="mobileFiltersOpen = false"></div>
+            
+            {{-- Drawer --}}
+            <aside x-show="mobileFiltersOpen"
+                   x-transition:enter="transition-transform duration-300"
+                   x-transition:enter-start="translate-y-full"
+                   x-transition:enter-end="translate-y-0"
+                   x-transition:leave="transition-transform duration-300"
+                   x-transition:leave-start="translate-y-0"
+                   x-transition:leave-end="translate-y-full"
+                   class="fixed inset-x-0 bottom-0 z-[70] bg-white rounded-t-2xl shadow-xl max-h-[85vh] overflow-y-auto w-full">
+                <div class="p-5">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-slate-800">Filter</h3>
+                        <button type="button" @click="mobileFiltersOpen = false" class="bg-slate-100 text-slate-500 hover:text-slate-700 p-2 rounded-full">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
+                    </div>
+                    
+                    <form action="{{ route('product.index') }}" method="GET">
+                        <input type="hidden" name="search" value="{{ request('search') }}">
+                        <ul class="space-y-2">
+                            <li>
+                                <label class="flex items-center gap-2 text-sm cursor-pointer hover:text-amber-600 transition">
+                                    <input type="radio" name="kategori" value="" onchange="this.form.submit()" class="text-amber-500 focus:ring-amber-500" {{ !request('kategori') ? 'checked' : '' }}>
+                                    <span class="{{ !request('kategori') ? 'font-semibold text-amber-600' : 'text-slate-600' }}">Semua Kategori</span>
+                                </label>
+                            </li>
+                            @foreach($parentCategories as $parent)
+                            <li class="pt-2">
+                                <label class="flex items-center gap-2 text-sm cursor-pointer hover:text-amber-600 transition">
+                                    <input type="radio" name="kategori" value="{{ $parent->slug }}" onchange="this.form.submit()" class="text-amber-500 focus:ring-amber-500" {{ request('kategori') === $parent->slug ? 'checked' : '' }}>
+                                    <span class="{{ request('kategori') === $parent->slug ? 'font-semibold text-amber-600' : 'text-slate-700 font-medium' }}">{{ $parent->name }}</span>
+                                </label>
+                                @if($parent->children->count() > 0)
+                                <ul class="ml-5 mt-2 space-y-2 border-l border-slate-100 pl-3">
+                                    @foreach($parent->children as $child)
+                                    <li>
+                                        <label class="flex items-center gap-2 text-sm cursor-pointer hover:text-amber-600 transition">
+                                            <input type="radio" name="kategori" value="{{ $child->slug }}" onchange="this.form.submit()" class="text-amber-500 focus:ring-amber-500" {{ request('kategori') === $child->slug ? 'checked' : '' }}>
+                                            <span class="{{ request('kategori') === $child->slug ? 'font-semibold text-amber-600' : 'text-slate-500' }}">{{ $child->name }}</span>
+                                        </label>
+                                    </li>
+                                    @endforeach
+                                </ul>
+                                @endif
+                            </li>
+                            @endforeach
+                        </ul>
+                    </form>
                 </div>
-                
+            </aside>
+        </div>
+
+        {{-- Desktop Sidebar --}}
+        <aside class="hidden lg:block w-64 shrink-0">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 sticky top-24">
                 <h3 class="font-semibold text-slate-800 mb-4 uppercase tracking-wider text-sm">Kategori</h3>
                 
-                <form action="{{ route('product.index') }}" method="GET" id="filter-form">
+                <form action="{{ route('product.index') }}" method="GET">
                     <input type="hidden" name="search" value="{{ request('search') }}">
-                    
                     <ul class="space-y-2">
                         <li>
                             <label class="flex items-center gap-2 text-sm cursor-pointer hover:text-amber-600 transition">
@@ -52,7 +97,6 @@
                                 <input type="radio" name="kategori" value="{{ $parent->slug }}" onchange="this.form.submit()" class="text-amber-500 focus:ring-amber-500" {{ request('kategori') === $parent->slug ? 'checked' : '' }}>
                                 <span class="{{ request('kategori') === $parent->slug ? 'font-semibold text-amber-600' : 'text-slate-700 font-medium' }}">{{ $parent->name }}</span>
                             </label>
-                            
                             @if($parent->children->count() > 0)
                             <ul class="ml-5 mt-2 space-y-2 border-l border-slate-100 pl-3">
                                 @foreach($parent->children as $child)

@@ -24,6 +24,8 @@ class Product extends Model
         'stock',
         'low_stock_threshold',
         'description',
+        'is_featured',
+        'featured_order',
     ];
 
     protected $casts = [

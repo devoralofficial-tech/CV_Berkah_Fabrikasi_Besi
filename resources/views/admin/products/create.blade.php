@@ -17,7 +17,7 @@
                 @error('name')<p class="text-red-500 text-xs font-medium mt-1">{{ $message }}</p>@enderror
             </div>
 
-            <div class="grid grid-cols-2 gap-5" x-data="categorySelector()">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5" x-data="categorySelector()">
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Kategori Induk <span class="text-red-500">*</span></label>
                     <select @change="loadChildren($event.target.value)" required class="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 transition-colors">
@@ -39,7 +39,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-3 gap-5">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Satuan <span class="text-red-500">*</span></label>
                     <select name="unit" required class="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 transition-colors">
@@ -59,7 +59,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Stok Minimum Alert <span class="text-red-500">*</span></label>
                     <input type="number" name="low_stock_threshold" value="{{ old('low_stock_threshold', 0) }}" min="0" step="0.01" required class="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 transition-colors">
@@ -70,7 +70,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-5 p-4 bg-amber-50 rounded-xl border border-amber-100">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 p-4 bg-amber-50 rounded-xl border border-amber-100">
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-amber-700 mb-1.5">Tampilkan di Produk Unggulan?</label>
                     <select name="is_featured" class="w-full border border-amber-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 transition-colors">
@@ -97,12 +97,12 @@
                 <textarea name="description" rows="3" class="w-full border border-slate-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 transition-colors resize-none">{{ old('description') }}</textarea>
             </div>
 
-            <div class="flex items-center gap-3 pt-4 mt-4 border-t border-slate-100">
-                <button type="submit" :disabled="loading" class="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-8 py-3 rounded-xl text-sm transition-all shadow-lg shadow-emerald-500/30 hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed w-auto">
+            <div class="flex items-center gap-3 p-4 mt-6 bg-emerald-50 rounded-xl border border-emerald-100">
+                <button type="submit" :disabled="loading" class="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-3 rounded-xl text-sm transition-all shadow-lg shadow-emerald-500/30 hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed flex-1 sm:flex-none">
                     <svg x-show="loading" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                     <span x-text="loading ? 'Menyimpan...' : 'Simpan Produk'"></span>
                 </button>
-                <a href="{{ route('admin.products.index') }}" class="px-6 py-3 border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-800 font-bold rounded-xl text-sm transition-colors">Batal</a>
+                <a href="{{ route('admin.products.index') }}" class="px-6 py-3 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-800 font-bold rounded-xl text-sm transition-colors flex-1 sm:flex-none text-center">Batal</a>
             </div>
         </form>
     </div>

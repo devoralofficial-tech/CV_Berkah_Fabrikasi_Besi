@@ -109,6 +109,21 @@ class CartController extends Controller
         }
 
         $this->saveCart($cart);
+        
+        if ($request->expectsJson()) {
+            // Calculate new total
+            $total = 0;
+            foreach ($cart as $pid => $item) {
+                $p = Product::find($pid);
+                if ($p) $total += $p->sell_price * $item['qty'];
+            }
+            return response()->json([
+                'success' => true,
+                'total' => $total,
+                'cart_count' => count($cart)
+            ]);
+        }
+
         return redirect()->route('cart.index');
     }
 

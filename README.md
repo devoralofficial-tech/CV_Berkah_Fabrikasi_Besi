@@ -4,10 +4,12 @@ Aplikasi ERP Mini & POS (Point of Sales) lengkap dengan sistem Katalog Publik da
 
 ## Fitur Utama
 
+- **Mobile-Optimized UI/UX:** Tampilan responsif penuh di semua perangkat, dengan *bottom navigation* bergaya aplikasi mobile untuk Publik, Kasir, dan Gudang yang nyaman digunakan dengan jempol (thumb-friendly).
+- **Asisten Chatbot Cerdas:** Widget *chatbot* interaktif untuk menjawab pertanyaan umum pelanggan terkait cara pemesanan dan pengiriman, serta dapat diatur langsung oleh Admin.
 - **Katalog Publik Dinamis:** Etalase produk B2B dengan filter kategori bertingkat dan pencarian.
 - **Pemesanan via WhatsApp:** Alur checkout *friction-less* untuk pembeli, langsung mengarah ke WhatsApp Admin beserta rincian pesanan.
-- **Manajemen Inventaris (Gudang):** Validasi ketat (Atomic Database Transactions) untuk mutasi stok masuk dan keluar, serta fitur Stock Opname (Penyesuaian Fisik).
-- **Point of Sales (Kasir):** Transaksi *walk-in* yang terintegrasi penuh menggunakan Alpine.js untuk pencarian produk cepat tanpa reload.
+- **Manajemen Inventaris (Gudang):** Validasi ketat (Atomic Database Transactions) untuk mutasi stok masuk dan keluar, serta fitur **Riwayat Stock Opname** (Penyesuaian Fisik).
+- **Point of Sales (Kasir):** Transaksi *walk-in* yang terintegrasi penuh menggunakan Alpine.js dengan layout rapi dan *quick shortcut* kuantitas barang otomatis sesuai satuannya.
 - **Laporan Excel:** Ekspor data penjualan, laporan laba rugi, dan riwayat mutasi stok ke format Excel secara presisi.
 - **Role-Based Access:** Mendukung hak akses Admin dan Staff/Kasir.
 
@@ -82,11 +84,7 @@ Jika Anda baru saja meng-clone project ini dari repositori dan menggunakan **Lar
    `http://cv-berkah-fabrikasi-besi.test/`
    *(Jika URL .test belum berfungsi, Anda bisa menjalankannya manual dengan `php artisan serve` lalu buka `http://127.0.0.1:8000/`)*
 
-## Akun Login (Hasil Seeding)
 
-**Akses Admin Panel:** `http://cv-berkah-fabrikasi-besi.test/login`
-- **Email:** `admin@cvberkah.id`
-- **Password:** `password`
 
 ## Asumsi & Keputusan Teknis
 

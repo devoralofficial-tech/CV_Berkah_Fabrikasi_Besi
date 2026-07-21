@@ -70,6 +70,20 @@
                 </div>
             </div>
 
+            <div class="grid grid-cols-2 gap-5 p-4 bg-amber-50 rounded-xl border border-amber-100">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-amber-700 mb-1.5">Tampilkan di Produk Unggulan?</label>
+                    <select name="is_featured" class="w-full border border-amber-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 transition-colors">
+                        <option value="0" {{ old('is_featured') == '0' ? 'selected' : '' }}>Tidak</option>
+                        <option value="1" {{ old('is_featured') == '1' ? 'selected' : '' }}>Ya</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-amber-700 mb-1.5">Urutan Tampil (Opsional)</label>
+                    <input type="number" name="featured_order" value="{{ old('featured_order', 0) }}" class="w-full border border-amber-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 transition-colors">
+                </div>
+            </div>
+
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Foto Produk</label>
                 <input type="file" name="image" accept="image/jpeg,image/jpg,image/png,image/webp"

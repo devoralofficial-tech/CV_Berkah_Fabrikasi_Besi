@@ -90,6 +90,8 @@ class ProductController extends Controller
             'stock'               => 0,
             'low_stock_threshold' => $data['low_stock_threshold'],
             'description'         => $data['description'] ?? null,
+            'is_featured'         => $data['is_featured'] ?? false,
+            'featured_order'      => $data['featured_order'] ?? 0,
         ]);
 
         // Create initial stock log if initial_stock > 0
@@ -147,6 +149,8 @@ class ProductController extends Controller
             'cost_price'          => $data['cost_price'] ?? $product->cost_price,
             'low_stock_threshold' => $data['low_stock_threshold'],
             'description'         => $data['description'] ?? null,
+            'is_featured'         => $data['is_featured'] ?? false,
+            'featured_order'      => $data['featured_order'] ?? 0,
         ]);
 
         return redirect()->route('admin.products.index')

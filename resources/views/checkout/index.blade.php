@@ -17,23 +17,23 @@
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap <span class="text-red-500">*</span></label>
                         <input type="text" name="customer_name" value="{{ old('customer_name') }}"
-                               class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 @error('customer_name') border-red-400 @enderror"
+                               class="w-full border border-slate-200 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-amber-400 @error('customer_name') border-red-400 @enderror"
                                placeholder="Masukkan nama lengkap">
                         @error('customer_name')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">No. HP (WhatsApp) <span class="text-red-500">*</span></label>
-                        <input type="text" name="customer_phone" value="{{ old('customer_phone') }}"
-                               class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 @error('customer_phone') border-red-400 @enderror"
+                        <input type="tel" inputmode="numeric" name="customer_phone" value="{{ old('customer_phone') }}"
+                               class="w-full border border-slate-200 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-amber-400 @error('customer_phone') border-red-400 @enderror"
                                placeholder="contoh: 08123456789">
                         @error('customer_phone')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">Alamat Pengiriman</label>
-                        <textarea name="customer_address" rows="2"
-                                  class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 resize-none"
+                        <textarea name="customer_address" rows="3"
+                                  class="w-full border border-slate-200 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-amber-400 resize-none"
                                   placeholder="Opsional — untuk estimasi ongkos kirim">{{ old('customer_address') }}</textarea>
                     </div>
 

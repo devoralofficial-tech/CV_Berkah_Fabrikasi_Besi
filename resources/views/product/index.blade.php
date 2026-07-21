@@ -12,7 +12,7 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12" x-data="{ mobileFiltersOpen: false }">
     <div class="flex flex-col lg:flex-row gap-8">
         
-        {{-- Mobile filter dialog --}}
+        {{-- Mobile filter button --}}
         <div class="lg:hidden">
             <button @click="mobileFiltersOpen = true" class="flex items-center gap-2 bg-white border border-slate-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium shadow-sm w-full justify-center">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
@@ -20,12 +20,16 @@
             </button>
         </div>
 
-        {{-- Sidebar Filters --}}
-        <aside class="w-full lg:w-64 shrink-0 hidden lg:block" :class="{'hidden': !mobileFiltersOpen, 'block': mobileFiltersOpen}">
-            <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 sticky top-24">
+        {{-- Mobile Backdrop --}}
+        <div x-show="mobileFiltersOpen" x-transition.opacity class="fixed inset-0 z-[60] bg-slate-900/50 backdrop-blur-sm lg:hidden" @click="mobileFiltersOpen = false" style="display: none;"></div>
+
+        {{-- Sidebar / Bottom Sheet Filters --}}
+        <aside class="fixed inset-x-0 bottom-0 z-[70] bg-white rounded-t-2xl shadow-xl max-h-[85vh] overflow-y-auto lg:static lg:bg-transparent lg:rounded-none lg:shadow-none lg:overflow-visible lg:max-h-none lg:z-auto w-full lg:w-64 shrink-0 transition-transform duration-300 lg:translate-y-0"
+               :class="mobileFiltersOpen ? 'translate-y-0' : 'translate-y-full lg:translate-y-0'">
+            <div class="bg-white lg:rounded-xl lg:shadow-sm lg:border lg:border-slate-100 p-5 lg:sticky lg:top-24">
                 <div class="flex justify-between items-center lg:hidden mb-4">
                     <h3 class="font-bold text-slate-800">Filter</h3>
-                    <button @click="mobileFiltersOpen = false" class="text-slate-400 hover:text-slate-600">
+                    <button @click="mobileFiltersOpen = false" class="bg-slate-100 text-slate-500 hover:text-slate-700 p-2 rounded-full">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                     </button>
                 </div>
@@ -92,7 +96,7 @@
                     <a href="{{ route('product.index') }}" class="inline-block mt-4 text-amber-600 font-semibold hover:text-amber-700">Reset Pencarian</a>
                 </div>
             @else
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
                     @foreach($products as $product)
                         <x-product-card :product="$product" />
                     @endforeach

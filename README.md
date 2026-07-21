@@ -24,7 +24,9 @@ Aplikasi ERP Mini & POS (Point of Sales) lengkap dengan sistem Katalog Publik da
 Jika Anda baru saja meng-clone project ini dari repositori dan menggunakan **Laragon**, ikuti langkah-langkah wajib berikut agar project bisa berjalan normal di komputer Anda:
 
 1. **Pastikan Folder Berada di Root Laragon**
-   Letakkan hasil clone project ini di dalam folder `C:\laragon\www\`. Pastikan nama foldernya adalah `CV-Berkah-Fabrikasi-Besi` (atau sesuaikan, tapi ingat nama folder ini akan menjadi URL lokal Anda, misal: `http://cv-berkah-fabrikasi-besi.test`).
+   Letakkan hasil clone project ini di dalam folder `C:\laragon\www\`. Pastikan nama foldernya adalah `CV-Berkah-Fabrikasi-Besi` (URL lokal Anda akan menjadi `http://cv-berkah-fabrikasi-besi.test`).
+   
+   Jika Anda sudah meng-clone sebelumnya dan baru mengambil update terbaru dari Git (`git pull`), **langsung lompat ke langkah 6 dan 8** untuk mengupdate database dan build aset.
 
 2. **Nyalakan Laragon**
    Buka aplikasi Laragon, lalu klik **Start All**. Pastikan service **Apache** dan **MySQL** sudah berjalan (berwarna biru/hijau).
@@ -53,12 +55,13 @@ Jika Anda baru saja meng-clone project ini dari repositori dan menggunakan **Lar
 5. **Buat Database di MySQL**
    Klik tombol **Database** di Laragon (biasanya membuka HeidiSQL atau phpMyAdmin). Buat database baru dengan nama persis: `cv_berkah`.
 
-6. **Generate Key, Migrate, dan Seed (Wajib)**
+6. **Generate Key, Migrate, dan Seed**
    Kembali ke terminal, jalankan urutan perintah berikut untuk mengunci aplikasi dan memasukkan struktur tabel beserta akun Admin bawaan:
    ```bash
    php artisan key:generate
    php artisan migrate --seed
    ```
+   > **Catatan Penting:** Jika Anda hanya menarik update terbaru (git pull) dari rekan tim lain, cukup jalankan `php artisan migrate` untuk memperbarui struktur tabel yang baru ditambahkan (seperti fitur Chatbot/Produk Unggulan).
 
 7. **Koneksikan Folder Gambar (Sangat Penting!)**
    Agar gambar produk yang di-upload admin bisa muncul dan tidak error "Not Found", Anda **wajib** menjalankan:
@@ -67,11 +70,12 @@ Jika Anda baru saja meng-clone project ini dari repositori dan menggunakan **Lar
    ```
 
 8. **Build Aset Tampilan (CSS/JS)**
-   Agar tampilan TailwindCSS dan Alpine.js berfungsi sempurna, install module Node dan build asetnya:
+   Agar tampilan TailwindCSS dan Alpine.js berfungsi sempurna (terutama setelah ada pembaruan UI mobile/POS), install module Node dan build asetnya:
    ```bash
    npm install
    npm run build
    ```
+   *(Untuk keperluan development/mengedit kode secara live, gunakan perintah `npm run dev`)*
 
 9. **Selesai! Buka di Browser**
    Buka browser Anda dan akses aplikasi ini melalui URL otomatis Laragon (sesuai nama folder):

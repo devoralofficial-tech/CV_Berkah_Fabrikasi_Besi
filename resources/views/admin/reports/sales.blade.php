@@ -25,6 +25,7 @@
             <input type="date" name="to" value="{{ $to }}" class="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
         </div>
         <button type="submit" class="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition">Filter</button>
+        <a href="{{ route('admin.reports.sales') }}" class="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 px-4 py-2 rounded-lg text-sm font-medium transition">Reset</a>
     </form>
 </div>
 

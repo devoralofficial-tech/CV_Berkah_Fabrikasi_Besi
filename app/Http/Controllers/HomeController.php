@@ -16,11 +16,13 @@ class HomeController extends Controller
             ->withCount(['children', 'products'])
             ->get();
             
-        $latestProducts = Product::with(['category.parent'])
+        $featuredProducts = Product::with(['category.parent'])
+            ->where('is_featured', true)
+            ->orderBy('featured_order', 'asc')
             ->latest()
-            ->take(6)
+            ->take(8)
             ->get();
 
-        return view('home.index', compact('setting', 'parentCategories', 'latestProducts'));
+        return view('home.index', compact('setting', 'parentCategories', 'featuredProducts'));
     }
 }

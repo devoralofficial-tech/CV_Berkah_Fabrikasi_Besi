@@ -43,55 +43,25 @@
     </div>
 </section>
 
-{{-- CATEGORY HIGHLIGHTS --}}
+{{-- FEATURED PRODUCTS --}}
+@if(isset($featuredProducts) && $featuredProducts->isNotEmpty())
 <section class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-10">
-            <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 mb-2">Kategori Produk</h2>
-            <p class="text-slate-500">Temukan produk sesuai kebutuhan Anda</p>
-        </div>
-
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-{{ min(count($parentCategories), 4) }} gap-4">
-            @forelse($parentCategories as $category)
-            <a href="{{ route('product.index', ['kategori' => $category->slug]) }}"
-               class="group flex flex-col items-center p-6 bg-slate-50 hover:bg-amber-50 border border-slate-100 hover:border-amber-200 rounded-xl transition duration-200 text-center">
-                <div class="w-14 h-14 bg-slate-200 group-hover:bg-amber-100 rounded-xl flex items-center justify-center mb-4 transition duration-200">
-                    <svg class="w-7 h-7 text-slate-500 group-hover:text-amber-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-                </div>
-                <h3 class="font-semibold text-slate-700 group-hover:text-amber-700 text-sm transition">{{ $category->name }}</h3>
-                <p class="text-xs text-slate-400 mt-1">{{ $category->children_count ?? 0 }} sub-kategori</p>
-            </a>
-            @empty
-            <p class="col-span-full text-center text-slate-400">Belum ada kategori</p>
-            @endforelse
-        </div>
-    </div>
-</section>
-
-{{-- LATEST PRODUCTS --}}
-<section class="py-16 bg-white border-t border-slate-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-end justify-between mb-10">
             <div>
-                <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 mb-2">Produk Terbaru</h2>
-                <p class="text-slate-500">Lihat koleksi material terbaru yang baru saja ditambahkan ke katalog kami.</p>
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 mb-2">Produk Unggulan</h2>
+                <p class="text-slate-500">Pilihan material terbaik dan paling dicari untuk proyek Anda.</p>
             </div>
             <a href="{{ route('product.index') }}" class="hidden sm:inline-flex items-center gap-2 text-amber-600 hover:text-amber-700 font-semibold transition">
                 Lihat Semua <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
             </a>
         </div>
 
-        @if(isset($latestProducts) && $latestProducts->isNotEmpty())
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            @foreach($latestProducts as $product)
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+            @foreach($featuredProducts as $product)
                 <x-product-card :product="$product" />
             @endforeach
         </div>
-        @else
-        <div class="text-center py-10 bg-slate-50 rounded-xl border border-slate-100">
-            <p class="text-slate-500">Belum ada produk yang ditambahkan.</p>
-        </div>
-        @endif
         
         <div class="mt-8 text-center sm:hidden">
             <a href="{{ route('product.index') }}" class="inline-flex items-center gap-2 text-amber-600 font-semibold">
@@ -100,6 +70,7 @@
         </div>
     </div>
 </section>
+@endif
 
 {{-- WHY US --}}
 <section class="py-16 bg-slate-50">
